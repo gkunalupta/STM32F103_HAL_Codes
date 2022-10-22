@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "GB_ESP8266_Basic.h"
+#include "GB_ESP8266_client.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -60,6 +61,10 @@ static void MX_USART2_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+//  const char gb_urlpath[100] ="/data/2.5/weather?q=delhi&appid=885e9149105e8901c9809ac018ce8658";
+//  const char gb_url[100] = "api.openweathermap.org";
+  const char gb_urlpath[100] ="/update?api_key=K86PTN9OPANWW8MF&field1";
+  const char gb_url[100] = "api.thingspeak.com";
 /* USER CODE END 0 */
 
 /**
@@ -101,18 +106,11 @@ int main(void)
   __NVIC_EnableIRQ(USART2_IRQn);
   __NVIC_SetPriority (USART2_IRQn, 1);
 
-  //enable RXNE interrupts on USART1 SIDE
-//	USART1->CR1 |= USART_CR1_RXNEIE;
-//__NVIC_EnableIRQ(USART1_IRQn);
-//__NVIC_SetPriority (USART1_IRQn, 1);
+  HAL_UART_Transmit(&huart1,(uint8_t *)"****ESP8266 as client******",27, 100);
 
-  HAL_UART_Transmit(&huart1,(uint8_t *)"\nKunal",6, 100);
- HAL_UART_Transmit(&huart1,&dec,1, 100);
-
- // HAL_UART_Transmit(&huart2,(uint8_t *)"AT+CIPMUX?\r\n",14, 100);
-  //GB_getstring_UART2();
+  //Initialise ESP8266 module
   GB_esp8266_initialise_client();
-
+  uint8_t gb_t = 90;
   /* USER CODE END 2 */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -122,12 +120,12 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-//	  HAL_UART_Transmit(&huart1,(uint8_t *)"Kunal\n",6, 100);
-////	  HAL_Delay(1000);
-////	  HAL_UART_Transmit(&huart1,(uint8_t *)"Kunal\n",6, 100);
-////	  	  HAL_Delay(1000);
+	  GB_esp8266_connectTCPserver(gb_url,80);
+	  GB_esp8266_cipsendint(gb_t,gb_urlpath);
+	  GB_esp8266_tcpgetcommandint(gb_urlpath,gb_t);
+	  gb_t++;
 
-
+  	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }

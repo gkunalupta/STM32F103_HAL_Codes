@@ -5,13 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../EXTE_DRIV/GB_ESP8266_Basic.c 
+../EXTE_DRIV/GB_ESP8266_Basic.c \
+../EXTE_DRIV/GB_ESP8266_client.c 
 
 OBJS += \
-./EXTE_DRIV/GB_ESP8266_Basic.o 
+./EXTE_DRIV/GB_ESP8266_Basic.o \
+./EXTE_DRIV/GB_ESP8266_client.o 
 
 C_DEPS += \
-./EXTE_DRIV/GB_ESP8266_Basic.d 
+./EXTE_DRIV/GB_ESP8266_Basic.d \
+./EXTE_DRIV/GB_ESP8266_client.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -21,7 +24,7 @@ EXTE_DRIV/%.o: ../EXTE_DRIV/%.c EXTE_DRIV/subdir.mk
 clean: clean-EXTE_DRIV
 
 clean-EXTE_DRIV:
-	-$(RM) ./EXTE_DRIV/GB_ESP8266_Basic.d ./EXTE_DRIV/GB_ESP8266_Basic.o
+	-$(RM) ./EXTE_DRIV/GB_ESP8266_Basic.d ./EXTE_DRIV/GB_ESP8266_Basic.o ./EXTE_DRIV/GB_ESP8266_client.d ./EXTE_DRIV/GB_ESP8266_client.o
 
 .PHONY: clean-EXTE_DRIV
 

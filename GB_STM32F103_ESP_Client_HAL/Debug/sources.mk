@@ -23,5 +23,6 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32F1xx_HAL_Driver/Src \
-EXTE_DRIV \
+EXTE_DRIV/inc \
+EXTE_DRIV/src \
 
