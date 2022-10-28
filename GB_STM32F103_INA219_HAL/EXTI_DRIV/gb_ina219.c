@@ -103,31 +103,16 @@ void ina219_init()
 	ina219_confvalue >>= 8;  // 2nd byte having lobyte data(0-7 bits)
 
 	uint8_t tx_1[3] = {0,0,0};
-	tx_1[0] = ina219_CAL;
-	tx_1[1] = (uint8_t)ina219_calvalue;
-	tx_1[2] = ina219_cal_temp;
+	tx_1[0] = ina219_CAL;  // Sent Address of Calibration Register
+	tx_1[1] = (uint8_t)ina219_calvalue;  // Calibration High Byte is sent
+	tx_1[2] = ina219_cal_temp;  //Calibration Low Byte is sent
 	I2C_Master_Send (ina219_WA,tx_1 ,3);
 
-
-//	gb_i2c1_start_condition_w(); // Start Condition For Writing
-//	gb_i2c1_address_send_w(ina219_WA); // INA219 I2C address is sent with Write bit
-//	gb_i2c1_master_send_byte(ina219_CAL); // Sent Address of Calibration Register
-//	gb_i2c1_master_send_byte((uint8_t)ina219_calvalue); // Calibration High Byte is sent
-//	gb_i2c1_master_send_byte(ina219_cal_temp); //Calibration Low Byte is sent
-//	gb_i2c1_master_stop_generation(); // STOP Condition is generated
-
 	uint8_t tx_2[3] = {0,0,0};
-	tx_2[0] = ina219_CONF;
-	tx_2[1] = (uint8_t)ina219_confvalue;
-	tx_2[2] = ina219_conf_temp;
+	tx_2[0] = ina219_CONF;  // Sent Address of Configuration Register
+	tx_2[1] = (uint8_t)ina219_confvalue;  // CONFIGURATION High Byte is sent
+	tx_2[2] = ina219_conf_temp;  // CONFIGURATION LOW Byte is sent
 	I2C_Master_Send (ina219_WA,tx_2 ,3);
-
-//	gb_i2c1_start_condition_w();   // Start Condition For Writing
-//	gb_i2c1_address_send_w(ina219_WA);   // INA219 I2C address is sent with Write bit
-//	gb_i2c1_master_send_byte(ina219_CONF);   // Sent Address of Configuration Register
-//	gb_i2c1_master_send_byte((uint8_t)ina219_confvalue);  // CONFIGURATION High Byte is sent
-//	gb_i2c1_master_send_byte(ina219_conf_temp);  // CONFIGURATION LOW Byte is sent
-//	gb_i2c1_master_stop_generation(); // STOP Condition is generated
 
 }
 
@@ -149,26 +134,14 @@ float ina219_busvoltage()
 	 uint8_t rx_1[2] = {0,0};
 
 	 uint16_t retV[samples] = {0};
-//   uint8_t high_byte = 0;
-//   uint8_t low_byte = 0;
     for(uint8_t x = 1;x<(samples + 1);x++)
     {
     	  uint8_t tx_1 = 0;
-    	  tx_1 = ina219_BV;
+    	  tx_1 = ina219_BV; // Sent Address of Bus Voltage Register
     	  I2C_Master_Send (ina219_WA,&tx_1 ,1);
 
-    	//	gb_i2c1_start_condition_w();  // Start Condition For Writing
-    	//	gb_i2c1_address_send_w(ina219_WA);   // INA219 I2C address is sent with Write bit
-    	//	gb_i2c1_master_send_byte(ina219_BV); // Sent Address of Bus Voltage Register
-    	//	gb_i2c1_master_stop_generation();  // STOP Condition is generated
+    	 I2C_Master_Recv (ina219_RA,rx_1 ,2); // Reading High and Low Bytes
 
-
-    	 I2C_Master_Recv (ina219_RA,rx_1 ,2);
-
-    	  //	gb_i2c1_start_condition_r(); // Start Condition For Reading
-    	  //	gb_i2c1_address_send_r(ina219_RA); // INA219 I2C address is sent with Read bit
-    	  //	gb_i2c1_master_receive_2_bytes(&high_byte,&low_byte);  // Reading High and Low Bytes
-    	  //	gb_i2c1_master_stop_generation();
 
     	 retV[x] = rx_1[0];
     	 retV[x] <<= 8; // left shift the High Bytes by 8.
@@ -183,15 +156,13 @@ float ina219_busvoltage()
     	 for(uint8_t x = 1;x<(samples + 1);x++)
     	  {
     	      temp[x] = retV[x];
-    	   		temp[x] >>= 3;
-    	   		BV[x] =  temp[x] * 0.004;
-    	   		BV_sum += BV[x];
-    	   		}
+    	   	  temp[x] >>= 3;
+    	   	  BV[x] =  temp[x] * 0.004;
+    	   	  BV_sum += BV[x];
+    	   }
 
-    	   	BV_sum_ave = BV_sum/samples;
-    	   	return BV_sum_ave;
-
-
+    	   	 BV_sum_ave = BV_sum/samples;
+    	   	 return BV_sum_ave;
     }
 
 /*
@@ -232,56 +203,35 @@ float ina219_busvoltage()
  */
 float ina219_shuntcurrent()
 {
-//	uint16_t ret;  // Variable for Storing the  16 bit value
-//	uint8_t high_byte = 0;
-//	uint8_t low_byte = 0;
-
 	 uint8_t rx_1[2] = {0,0};
 	 uint16_t retV[samples] = {0};
 	 for(uint8_t x = 1;x<(samples + 1);x++)
 	 {
 
 		  uint8_t tx_1 = 0;
-		  tx_1 = ina219_CR;
+		  tx_1 = ina219_CR;  // Sent Address of Shunt Current Register
 		  I2C_Master_Send (ina219_WA,&tx_1 ,1);
 
-//	gb_i2c1_start_condition_w();  // Start Condition For Writing
-//	gb_i2c1_address_send_w(ina219_WA);  // INA219 I2C address is sent with Write bit
-//	gb_i2c1_master_send_byte(ina219_CR);  // Sent Address of Shunt Current Register
-//	gb_i2c1_master_stop_generation();    // STOP Condition is generated
+
+		  I2C_Master_Recv (ina219_RA,rx_1 ,2); // Reading High and Low Bytes
 
 
-
-		  I2C_Master_Recv (ina219_RA,rx_1 ,2);
-
-//	gb_i2c1_start_condition_r();    // Start Condition For Reading
-//	gb_i2c1_address_send_r(ina219_RA);  // INA219 I2C address is sent with Read bit
-//	gb_i2c1_master_receive_2_bytes(&high_byte,&low_byte);  // Reading High and Low Bytes
-//	gb_i2c1_master_stop_generation(); // STOP Condition is generated
-			 retV[x] = rx_1[0];
-		     retV[x] <<= 8; // left shift the High Bytes by 8.
-		     retV[x] |= rx_1[1]; // OR Operation on Left shifted MSB bits and LSB 8bits to get the Final 16 bit Value
-
-//		     ret = high_byte;
-//		     	ret <<= 8; // left shift the High Bytes by 8.
-//		     	ret |= low_byte; // OR Operation on Left shifted MSB bits and LSB 8bits to get the Final 16 bit Value
+		  retV[x] = rx_1[0];
+		  retV[x] <<= 8; // left shift the High Bytes by 8.
+		  retV[x] |= rx_1[1]; // OR Operation on Left shifted MSB bits and LSB 8bits to get the Final 16 bit Value
 
 		    }
 
 	 float CR_sum = 0.0;
-		  		 float CR_sum_ave = 0.0;
-		  		 float CR[samples];
-		  		 for(uint8_t x = 1;x<(samples + 1);x++)
-		  		 {
-		  		CR[x] =  retV[x] * CR_LSB * 1000;
-		  			CR_sum += CR[x];
-		  		 }
-		  	CR_sum_ave = CR_sum/samples;
-		return CR_sum_ave;
-
-
-
-
+	 float CR_sum_ave = 0.0;
+	 float CR[samples];
+	 for(uint8_t x = 1;x<(samples + 1);x++)
+ {
+	 CR[x] =  retV[x] * CR_LSB * 1000;
+	 CR_sum += CR[x];
+}
+	CR_sum_ave = CR_sum/samples;
+	return CR_sum_ave;
 }
 /*
  * Function for reading the Power Consumed by Load  Value from Power Register(0x03) of INA219
@@ -291,28 +241,13 @@ float ina219_shuntcurrent()
 float ina219_Loadpower()
 {
 	uint16_t ret;  // Variable for Storing the  16 bit value
-//	uint8_t high_byte = 0;
-//	uint8_t low_byte = 0;
+	uint8_t rx_1[2] = {0,0};
 
-	 uint8_t rx_1[2] = {0,0};
+	uint8_t tx_1 = 0;
+	tx_1 = ina219_PW; // Sent Address of Power Register
+	I2C_Master_Send (ina219_WA,&tx_1 ,1);
 
-	  uint8_t tx_1 = 0;
-	  tx_1 = ina219_PW;
-	  I2C_Master_Send (ina219_WA,&tx_1 ,1);
-
-//	gb_i2c1_start_condition_w();  // Start Condition For Writing
-//	gb_i2c1_address_send_w(ina219_WA);  // INA219 I2C address is sent with Write bit
-//	gb_i2c1_master_send_byte(ina219_PW); // Sent Address of Power Register
-//	gb_i2c1_master_stop_generation(); // STOP Condition is generated
-
-
-
-	  I2C_Master_Recv (ina219_RA,rx_1 ,2);
-
-//	gb_i2c1_start_condition_r();  // Start Condition For Reading
-//	gb_i2c1_address_send_r(ina219_RA); // INA219 I2C address is sent with Read bit
-//	gb_i2c1_master_receive_2_bytes(&high_byte,&low_byte);  // Reading High and Low Bytes
-//	gb_i2c1_master_stop_generation(); // STOP Condition is generated
+	I2C_Master_Recv (ina219_RA,rx_1 ,2); // Reading High and Low Bytes
 
 	ret = rx_1[0];
 	ret <<= 8; // left shift the High Bytes by 8.
@@ -322,6 +257,4 @@ float ina219_Loadpower()
 	PW =  ret * PW_LSB * 1000;
 
 	return PW;
-
-
 }

@@ -58,7 +58,7 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+float bus_v =0.0;
 /* USER CODE END 0 */
 
 /**
@@ -105,7 +105,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  ina219_busvoltage();
+	  bus_v = ina219_busvoltage();
 	 // GB_printString1("V\n");
 
 	 // GB_printString1("Shunt Voltage: ");
