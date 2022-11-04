@@ -1,0 +1,10 @@
+gb_timer_input_capture.c:33:6:TIM3_IRQHandler	8	static
+gb_timer_input_capture.c:69:7:TIM3_getPeriod	4	static
+gb_timer_input_capture.c:74:7:TIM3_getwidth	4	static
+gb_timer_input_capture.c:79:7:TIM3_getFrequency	4	static
+gb_timer_input_capture.c:85:6:TIM3_setPeriod	16	static
+gb_timer_input_capture.c:93:6:TIM4_IRQHandler	8	static
+gb_timer_input_capture.c:128:7:TIM4_getPeriod	4	static
+gb_timer_input_capture.c:133:7:TIM4_getwidth	4	static
+gb_timer_input_capture.c:138:7:TIM4_getFrequency	4	static
+gb_timer_input_capture.c:144:6:TIM4_setPeriod	16	static
