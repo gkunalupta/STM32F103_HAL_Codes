@@ -17,6 +17,8 @@ void tim4_ch1_capture_unconfig();
 float TIM4_getPeriod();
 float TIM4_getwidth();
 float TIM4_getFrequency();
+void TIM4_setPeriod(uint32_t value);
+
 
 void tim3_ch2_capture_config();
 void tim3_ch2_capture_unconfig();
@@ -25,5 +27,6 @@ void tim3_ch2_capture_unconfig();
 float TIM3_getPeriod();
 float TIM3_getwidth();
 float TIM3_getFrequency();
+void TIM3_setPeriod(uint32_t value);
 
 #endif /* GB_TIMER_INPUT_CAPTURE_H_ */

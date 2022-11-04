@@ -22,6 +22,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+
+#include "gb_hlw8012.h"
+#include "gb_timer_input_capture.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,7 +47,26 @@ TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart1;
 
+uint16_t size_of_command( const char* gb_string)
+{
+	uint16_t counter=0;
+	while(*gb_string)
+	{
+		counter = counter+1;
+		*gb_string++;
+	}
+	return counter;
+}
+void GB_printString1(const char *gb_myString)
+{
+	HAL_UART_Transmit(&huart1,(uint8_t *)gb_myString,size_of_command(gb_myString), 100);
+}
+
+
 /* USER CODE BEGIN PV */
+#define CURRENT_RESISTOR                0.001
+#define VOLTAGE_RESISTOR_UPSTREAM       ( 5 * 470000 ) // Real: 2280k
+#define VOLTAGE_RESISTOR_DOWNSTREAM     ( 1000 ) // Real 1.009k
 
 /* USER CODE END PV */
 
@@ -99,12 +121,24 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 
-  HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);   // main channel
-   HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);   // indirect channel
+//  HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);   // main channel
+//  HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);   // indirect channel
 
-   HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);   // main channel
-     HAL_TIM_IC_Start(&htim4, TIM_CHANNEL_2);   // indirect channel
+ // HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);   // main channel
+  HAL_TIM_IC_Start(&htim4, TIM_CHANNEL_2);   // indirect channel
 
+  hlw8012_setResistors(CURRENT_RESISTOR, VOLTAGE_RESISTOR_UPSTREAM, VOLTAGE_RESISTOR_DOWNSTREAM);
+
+  		GB_printString1(" Default Current Multiplier");
+  		GB_decimel1(hlw8012_getcurrent_multiplier());
+
+  		GB_printString1(" Default Voltage Multiplier");
+  		GB_decimel1(hlw8012_getvoltage_multiplier());
+
+  		GB_printString1(" Default Power Multiplier");
+  		GB_decimel1(hlw8012_getpower_multiplier());
+
+  		hlw8012_calibrate();
 
   /* USER CODE END 2 */
 
@@ -115,6 +149,21 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	  // timer_capture_config_unconfig
+	  unsigned long gb_timeIn = HAL_GetTick();	// Timestamp coming into function
+	   			while (HAL_GetTick() - gb_timeIn < 4000)  // While we haven't timed out
+	   			{
+	   			  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);   // main channel
+	   				//tim4_ch1_capture_config();
+	   			}
+
+	   			unsigned long gb_timeI = HAL_GetTick();	// Timestamp coming into function
+	   			while (HAL_GetTick() - gb_timeI < 4000)  // While we haven't timed out
+	   			{
+	   				HAL_TIM_IC_Stop(&htim4, TIM_CHANNEL_1);
+	   				//tim4_ch1_capture_unconfig();
+	   			}
   }
   /* USER CODE END 3 */
 }
@@ -325,11 +374,22 @@ static void MX_USART1_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PB7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 

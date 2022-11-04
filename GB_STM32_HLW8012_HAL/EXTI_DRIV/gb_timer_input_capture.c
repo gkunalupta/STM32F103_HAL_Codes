@@ -7,7 +7,7 @@
 
 #include "main.h"
 #include "stm32f1xx_it.h"
-
+#include "gb_timer_input_capture.h"
 
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
@@ -29,6 +29,37 @@ float TIM4_Period = 0;
 float TIM4_Width = 0;
 float TIM4_Period_Current = 0;
 
+void tim4_ch1_capture_config()
+{
+	   TIM4->DIER |= TIM_DIER_CC1IE; //capture interrupt enabled
+	   TIM4->CCER |= TIM_CCER_CC1E; // timer 4 channel1 configured for capture enabled
+	   TIM4->CCER |= TIM_CCER_CC2E; // timer 4 channel1 configured for capture enabled
+	   TIM4->CR1 |= TIM_CR1_CEN; //enable the time2
+}
+
+void tim4_ch1_capture_unconfig()
+{
+		   TIM4->DIER &= ~TIM_DIER_CC1IE; //capture interrupt disabled
+		   TIM4->CCER &= ~TIM_CCER_CC1E; // timer 4 channel1 unconfigured for capture enabled
+		   TIM4->CCER &= ~TIM_CCER_CC2E; //timer 4 channel2 unconfigured for capture enabled
+		   TIM4->CR1 &= ~TIM_CR1_CEN; //disabled the timer
+}
+
+void tim3_ch2_capture_config()
+{
+	   TIM3->DIER |= TIM_DIER_CC2IE; //capture interrupt enable
+	   TIM3->CCER |= TIM_CCER_CC1E; // timer 3 channel1 configured for capture enabled
+	   TIM3->CCER |= TIM_CCER_CC2E; //timer 3 channel2 configured for capture enabled
+	   TIM3->CR1 |= TIM_CR1_CEN; //enable the timer
+}
+
+void tim3_ch2_capture_unconfig()
+{
+		   TIM3->DIER &= ~TIM_DIER_CC2IE; //capture interrupt enable
+		   TIM3->CCER &= ~TIM_CCER_CC1E; // timer 3 channel1 unconfigured for capture enabled
+		   TIM3->CCER &= ~TIM_CCER_CC2E; ////timer 3 channel2 unconfigured for capture enabled
+		   TIM3->CR1 &= ~TIM_CR1_CEN; //disable the timer
+}
 
 void TIM3_IRQHandler(void)
 {
