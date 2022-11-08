@@ -19,5 +19,5 @@
 "./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o"
 "./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o"
 "./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o"
-"./EXTI_DRIV/gb_hlw8012.o"
-"./EXTI_DRIV/gb_timer_input_capture.o"
+"./EXTI_DRIV/src/gb_hlw8012.o"
+"./EXTI_DRIV/src/gb_timer_input_capture.o"

@@ -82,7 +82,15 @@ static void MX_TIM4_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+float current = 0;
 
+float voltage = 0;
+
+float power = 0;
+
+float def_current_multi = 0;
+float def_voltage_multi = 0;
+float def_power_multi = 0;
 
 
 /* USER CODE END 0 */
@@ -100,7 +108,10 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+
+
+
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -116,29 +127,36 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+
   MX_TIM3_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
 
-//  HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);   // main channel
-//  HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);   // indirect channel
+ HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);   // main channel
+  HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);   // indirect channel
 
- // HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);   // main channel
+  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);   // main channel
   HAL_TIM_IC_Start(&htim4, TIM_CHANNEL_2);   // indirect channel
 
-  hlw8012_setResistors(CURRENT_RESISTOR, VOLTAGE_RESISTOR_UPSTREAM, VOLTAGE_RESISTOR_DOWNSTREAM);
+ hlw8012_setResistors(CURRENT_RESISTOR, VOLTAGE_RESISTOR_UPSTREAM, VOLTAGE_RESISTOR_DOWNSTREAM);
 
   		GB_printString1(" Default Current Multiplier");
-  		GB_decimel1(hlw8012_getcurrent_multiplier());
+  		//GB_decimel1(hlw8012_getcurrent_multiplier());
+	def_current_multi =hlw8012_getcurrent_multiplier();
 
   		GB_printString1(" Default Voltage Multiplier");
-  		GB_decimel1(hlw8012_getvoltage_multiplier());
+  		//GB_decimel1(hlw8012_getvoltage_multiplier());
+	def_voltage_multi =hlw8012_getvoltage_multiplier();
 
   		GB_printString1(" Default Power Multiplier");
-  		GB_decimel1(hlw8012_getpower_multiplier());
+  		//GB_decimel1(hlw8012_getpower_multiplier());
+	def_power_multi = hlw8012_getpower_multiplier();
 
-  		hlw8012_calibrate();
+
+
+   hlw8012_calibrate();
+
 
   /* USER CODE END 2 */
 
@@ -150,20 +168,12 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  // timer_capture_config_unconfig
-	  unsigned long gb_timeIn = HAL_GetTick();	// Timestamp coming into function
-	   			while (HAL_GetTick() - gb_timeIn < 4000)  // While we haven't timed out
-	   			{
-	   			  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);   // main channel
-	   				//tim4_ch1_capture_config();
-	   			}
+ current = hlw8012_getcurrent();
+ voltage =  hlw8012_getvoltage();
+ power =  hlw8012_getactivepower();
+ HAL_Delay(100);
 
-	   			unsigned long gb_timeI = HAL_GetTick();	// Timestamp coming into function
-	   			while (HAL_GetTick() - gb_timeI < 4000)  // While we haven't timed out
-	   			{
-	   				HAL_TIM_IC_Stop(&htim4, TIM_CHANNEL_1);
-	   				//tim4_ch1_capture_unconfig();
-	   			}
+
   }
   /* USER CODE END 3 */
 }
