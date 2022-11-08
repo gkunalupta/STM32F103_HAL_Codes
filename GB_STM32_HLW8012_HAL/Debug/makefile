@@ -62,7 +62,7 @@ main-build: GB_STM32_HLW8012_HAL.elf secondary-outputs
 
 # Tool invocations
 GB_STM32_HLW8012_HAL.elf: $(OBJS) $(USER_OBJS) D:\Users\kunal\Documents\STMcubeide1.8.0\GB_STM32_HLW8012_HAL\STM32F103C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "GB_STM32_HLW8012_HAL.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\Users\kunal\Documents\STMcubeide1.8.0\GB_STM32_HLW8012_HAL\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="GB_STM32_HLW8012_HAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "GB_STM32_HLW8012_HAL.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\Users\kunal\Documents\STMcubeide1.8.0\GB_STM32_HLW8012_HAL\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="GB_STM32_HLW8012_HAL.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

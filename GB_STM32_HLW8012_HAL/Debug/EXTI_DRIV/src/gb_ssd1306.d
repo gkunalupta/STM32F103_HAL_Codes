@@ -1,5 +1,5 @@
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o: \
- ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c \
+EXTI_DRIV/src/gb_ssd1306.o: ../EXTI_DRIV/src/gb_ssd1306.c \
+ ../EXTI_DRIV/inc/gb_ssd1306_hal.h ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
@@ -26,6 +26,10 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o: \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+
+../EXTI_DRIV/inc/gb_ssd1306_hal.h:
+
+../Core/Inc/main.h:
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 

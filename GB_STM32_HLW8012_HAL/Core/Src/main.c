@@ -25,6 +25,7 @@
 
 #include "gb_hlw8012.h"
 #include "gb_timer_input_capture.h"
+#include "gb_ssd1306_hal.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,10 +43,16 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c2;
+
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart1;
+
+
+
+/* USER CODE BEGIN PV */
 
 uint16_t size_of_command( const char* gb_string)
 {
@@ -62,8 +69,6 @@ void GB_printString1(const char *gb_myString)
 	HAL_UART_Transmit(&huart1,(uint8_t *)gb_myString,size_of_command(gb_myString), 100);
 }
 
-
-/* USER CODE BEGIN PV */
 #define CURRENT_RESISTOR                0.001
 #define VOLTAGE_RESISTOR_UPSTREAM       ( 5 * 470000 ) // Real: 2280k
 #define VOLTAGE_RESISTOR_DOWNSTREAM     ( 1000 ) // Real 1.009k
@@ -76,6 +81,7 @@ static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
+static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -108,10 +114,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-
-
-
-	HAL_Init();
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -127,10 +130,14 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
-
   MX_TIM3_Init();
   MX_TIM4_Init();
+  MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
+
+  ssd1306_init();
+  		ssd1306_clear(GB_SSD1306_COLOR_BLACK);
+  		ssd1306_update_data();
 
 
  HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);   // main channel
@@ -168,10 +175,39 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
- current = hlw8012_getcurrent();
- voltage =  hlw8012_getvoltage();
- power =  hlw8012_getactivepower();
- HAL_Delay(100);
+	  ssd1306_GotoXY(0, 0);
+	  		    ssd1306_print_string("Current:", GB_SSD1306_COLOR_WHITE);
+	  		    ssd1306_float(hlw8012_getcurrent(),GB_SSD1306_COLOR_WHITE);
+	  		    ssd1306_print_string(" A", GB_SSD1306_COLOR_WHITE);
+	  		    ssd1306_update_data();
+
+	  			ssd1306_GotoXY(0, 15);
+	  		    ssd1306_print_string("Voltage:", GB_SSD1306_COLOR_WHITE);
+	  		    ssd1306_float(hlw8012_getvoltage(),GB_SSD1306_COLOR_WHITE);
+	  		    ssd1306_print_string(" V", GB_SSD1306_COLOR_WHITE);
+	  			ssd1306_update_data();
+
+	  			ssd1306_GotoXY(0, 24);
+	  			ssd1306_print_string("Power:", GB_SSD1306_COLOR_WHITE);
+	  			ssd1306_float(hlw8012_getactivepower(),GB_SSD1306_COLOR_WHITE);
+	  			ssd1306_print_string(" W", GB_SSD1306_COLOR_WHITE);
+	  			ssd1306_update_data();
+
+
+//	  			GB_printString1("Current in AMPS: ");
+//	  			GB_float_value1(hlw8012_getcurrent());
+//	  			GB_printString1("A");
+//	  		    GB_uart_newline1();
+//
+//	  		    GB_printString1("Voltage in Volts: ");
+//	  		    GB_float_value1(hlw8012_getvoltage());
+//	  		    GB_printString1("V");
+//	  		    GB_uart_newline1();
+
+// current = hlw8012_getcurrent();
+// voltage =  hlw8012_getvoltage();
+// power =  hlw8012_getactivepower();
+// HAL_Delay(100);
 
 
   }
@@ -214,6 +250,40 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief I2C2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C2_Init(void)
+{
+
+  /* USER CODE BEGIN I2C2_Init 0 */
+
+  /* USER CODE END I2C2_Init 0 */
+
+  /* USER CODE BEGIN I2C2_Init 1 */
+
+  /* USER CODE END I2C2_Init 1 */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C2_Init 2 */
+
+  /* USER CODE END I2C2_Init 2 */
+
 }
 
 /**
@@ -388,8 +458,8 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);

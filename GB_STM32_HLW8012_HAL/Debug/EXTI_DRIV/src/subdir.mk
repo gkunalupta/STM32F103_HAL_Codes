@@ -6,14 +6,17 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../EXTI_DRIV/src/gb_hlw8012.c \
+../EXTI_DRIV/src/gb_ssd1306.c \
 ../EXTI_DRIV/src/gb_timer_input_capture.c 
 
 OBJS += \
 ./EXTI_DRIV/src/gb_hlw8012.o \
+./EXTI_DRIV/src/gb_ssd1306.o \
 ./EXTI_DRIV/src/gb_timer_input_capture.o 
 
 C_DEPS += \
 ./EXTI_DRIV/src/gb_hlw8012.d \
+./EXTI_DRIV/src/gb_ssd1306.d \
 ./EXTI_DRIV/src/gb_timer_input_capture.d 
 
 
@@ -24,7 +27,7 @@ EXTI_DRIV/src/%.o: ../EXTI_DRIV/src/%.c EXTI_DRIV/src/subdir.mk
 clean: clean-EXTI_DRIV-2f-src
 
 clean-EXTI_DRIV-2f-src:
-	-$(RM) ./EXTI_DRIV/src/gb_hlw8012.d ./EXTI_DRIV/src/gb_hlw8012.o ./EXTI_DRIV/src/gb_timer_input_capture.d ./EXTI_DRIV/src/gb_timer_input_capture.o
+	-$(RM) ./EXTI_DRIV/src/gb_hlw8012.d ./EXTI_DRIV/src/gb_hlw8012.o ./EXTI_DRIV/src/gb_ssd1306.d ./EXTI_DRIV/src/gb_ssd1306.o ./EXTI_DRIV/src/gb_timer_input_capture.d ./EXTI_DRIV/src/gb_timer_input_capture.o
 
 .PHONY: clean-EXTI_DRIV-2f-src
 
