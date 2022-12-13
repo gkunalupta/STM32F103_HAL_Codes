@@ -50,8 +50,6 @@ TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart1;
 
-
-
 /* USER CODE BEGIN PV */
 
 uint16_t size_of_command( const char* gb_string)
@@ -136,33 +134,30 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   ssd1306_init();
-  		ssd1306_clear(GB_SSD1306_COLOR_BLACK);
-  		ssd1306_update_data();
+  ssd1306_clear(GB_SSD1306_COLOR_BLACK);
+  ssd1306_update_data();
 
-
- HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);   // main channel
+  HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_2);   // main channel
   HAL_TIM_IC_Start(&htim3, TIM_CHANNEL_1);   // indirect channel
 
   HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);   // main channel
   HAL_TIM_IC_Start(&htim4, TIM_CHANNEL_2);   // indirect channel
 
- hlw8012_setResistors(CURRENT_RESISTOR, VOLTAGE_RESISTOR_UPSTREAM, VOLTAGE_RESISTOR_DOWNSTREAM);
+  hlw8012_setResistors(CURRENT_RESISTOR, VOLTAGE_RESISTOR_UPSTREAM, VOLTAGE_RESISTOR_DOWNSTREAM);
 
-  		GB_printString1(" Default Current Multiplier");
-  		//GB_decimel1(hlw8012_getcurrent_multiplier());
-	def_current_multi =hlw8012_getcurrent_multiplier();
+  GB_printString1(" Default Current Multiplier");
+  //GB_decimel1(hlw8012_getcurrent_multiplier());
+  def_current_multi =hlw8012_getcurrent_multiplier();
 
-  		GB_printString1(" Default Voltage Multiplier");
-  		//GB_decimel1(hlw8012_getvoltage_multiplier());
-	def_voltage_multi =hlw8012_getvoltage_multiplier();
+  GB_printString1(" Default Voltage Multiplier");
+  //GB_decimel1(hlw8012_getvoltage_multiplier());
+  def_voltage_multi =hlw8012_getvoltage_multiplier();
 
-  		GB_printString1(" Default Power Multiplier");
-  		//GB_decimel1(hlw8012_getpower_multiplier());
-	def_power_multi = hlw8012_getpower_multiplier();
+  GB_printString1(" Default Power Multiplier");
+  //GB_decimel1(hlw8012_getpower_multiplier());
+  def_power_multi = hlw8012_getpower_multiplier();
 
-
-
-   hlw8012_calibrate();
+  hlw8012_calibrate();
 
 
   /* USER CODE END 2 */
@@ -228,11 +223,11 @@ void SystemClock_Config(void)
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV2;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL4;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL5;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
