@@ -1,0 +1,16 @@
+w25q128jv.c:20:6:SPI1_Send	16	static
+w25q128jv.c:25:6:SPI1_Recv	16	static
+w25q128jv.c:29:6:W25_Reset	8	static
+w25q128jv.c:37:6:WriteEnable_flash	8	static
+w25q128jv.c:45:6:W25_Read_Data	24	static
+w25q128jv.c:56:6:W25_Write_Data	24	static
+w25q128jv.c:69:10:W25_Read_ID	16	static
+w25q128jv.c:79:6:W25_Ini	8	static
+w25q128jv.c:89:6:erase_sector4KB	16	static
+w25q128jv.c:102:6:erase_sector32KB	16	static
+w25q128jv.c:113:6:erase_sector64KB	16	static
+w25q128jv.c:124:6:chip_erase	8	static
+w25q128jv.c:132:6:Uinque_ID	16	static
+w25q128jv.c:138:6:WriteSR	16	static
+w25q128jv.c:148:9:ReadSR	24	static
+w25q128jv.c:158:6:WaitForWriteEnd	16	static
